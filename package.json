@@ -1,6 +1,6 @@
 {
   "name": "md-lib",
-  "version": "1.0.47",
+  "version": "1.0.48",
   "description": "Dependency library for modular desktop portlets",
   "scripts": {
     "test": "standard",
