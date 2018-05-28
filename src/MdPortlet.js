@@ -76,11 +76,9 @@ export default class MdPortlet {
     } catch (err) {
       this.context.api.error('Error when loading data: ' + err.message)
     }
-
   }
 
   makeApiUrl (method, params) {
     return '/md/api' + (this.context.def.dataPrefix || this.context.def.url || '') + method + '/' + this.encodeParams(params)
   }
-
 }
