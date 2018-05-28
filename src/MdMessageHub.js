@@ -83,13 +83,13 @@ export default class MdMessageHub {
 
       let job = {
         progress: (msg) => {
-          this.publish('ws.worker.' + jobId + ':message', msg);
+          this.publish(subject + ':message', msg);
         },
         error: (msg) => {
-          this.publish('ws.worker.' + jobId + ':error', msg);
+          this.publish(subject + ':error', msg);
         },
-        done: () => {
-          this.publish('ws.worker.' + jobId + ':done', msg);
+        done: (msg) => {
+          this.publish(subject + ':done', msg);
         }
       }
       let result = method.apply(this, [job].concat(parameters))
