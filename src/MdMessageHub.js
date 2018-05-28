@@ -75,7 +75,7 @@ export default class MdMessageHub {
     })
   }
 
-  exposeAsync(method) {
+  exposeJob(method) {
     var methodWrapper = (...parameters) => {
       let jobId = uuid().replace(/-/g, '')
       let subject = 'ws.worker.' + jobId
