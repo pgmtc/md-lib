@@ -33,7 +33,7 @@ export default class MdPortletServer {
 
   async handleApiCall(req, res, next){
     var methodName = req.params.methodName;
-    var methodParams = MdUtils.getRestApiParams(req.params.methodParams);
+    var methodParams = MdUtils.decodeApiParams(req.params.methodParams);
     log.debug(`Received api call for ${methodName}, parameters: ${methodParams}`)
     // Invoke function
     try {
