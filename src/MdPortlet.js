@@ -29,24 +29,12 @@ export default class MdPortlet {
     console.warn('loaded should be overridden')
   }
 
-  async httpGet (path) {
+  async httpGet (path, noUrlFix) {
     if (!this.context.axios) {
       throw new Error('axios have not been provided to the portlet')
     }
     try {
-      const response = await this.context.axios.get(this.makeUrl(path))
-      return response.data
-    } catch (err) {
-      this.context.api.error('Error when loading data: ' + err.message)
-    }
-  }
-
-  async httpPost (path, data) {
-    if (!this.context.axios) {
-      throw new Error('axios have not been provided to the portlet')
-    }
-    try {
-      const response = await this.context.axios.post(this.makeUrl(path, data))
+      const response = await this.context.axios.get(noUrlFix ? path : this.makeUrl(path))
       return response.data
     } catch (err) {
       this.context.api.error('Error when loading data: ' + err.message)
