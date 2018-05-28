@@ -68,9 +68,15 @@ export default class MdPortlet {
     if (!this.context.axios) {
       throw new Error('axios have not been provided to the portlet')
     }
-    var url = this.makeApiUrl(method, params)
-    var results = await this.context.axios.get(url)
-    return results.data
+
+    try {
+      var url = this.makeApiUrl(method, params)
+      var results = await this.context.axios.get(url)
+      return results.data
+    } catch (err) {
+      this.context.api.error('Error when loading data: ' + err.message)
+    }
+
   }
 
   makeApiUrl (method, params) {
