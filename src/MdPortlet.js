@@ -60,10 +60,6 @@ export default class MdPortlet {
     return this.context.socket
   }
 
-  makeUrl (path) {
-    return (this.context.def.dataPrefix || this.context.def.url || '') + path
-  }
-
   async api (method, params) {
     if (!this.context.axios) {
       throw new Error('axios have not been provided to the portlet')
@@ -78,7 +74,22 @@ export default class MdPortlet {
     }
   }
 
+  broadcast (subject, message) {
+    var url = this.context.wsEndpointUrl + '/' + subject + '/' + encodeURI(JSON.stringify(message))
+    console.log(url)
+    this.httpGet(url, true)
+  }
+
+  emit (subject, message) {
+    let socket = this.getSocket()
+    socket.emit(subject, message)
+  }
+
   makeApiUrl (method, params) {
-    return '/md/api' + (this.context.def.dataPrefix || this.context.def.url || '') + method + '/' + MdUtils.encodeApiParams(params)
+    return this.context.apiEndpointUrl + (this.context.def.dataPrefix || this.context.def.url || '') + method + '/' + MdUtils.encodeApiParams(params)
+  }
+
+  makeUrl (path) {
+    return (this.context.def.dataPrefix || this.context.def.url || '') + path
   }
 }
