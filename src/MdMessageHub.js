@@ -2,7 +2,6 @@ import NATS from 'nats'
 import log from './logger'
 import MdUtils from './MdUtils'
 import os from 'os'
-import uuidv4 from 'uuid/v4'
 
 const MSGHUB_TIMEOUT = process.env.MSGHUB_TIMEOUT || 1000
 
@@ -40,6 +39,10 @@ export default class MdMessageHub {
 
   messageReceiveHandler(msg, reply, subject) {
     log.debug('Message to ' + subject + ': ' + msg);
+  }
+
+  publish(subject, message) {
+    this.nats.publish(subject, message)
   }
 
   expose(method) {
@@ -104,10 +107,6 @@ export default class MdMessageHub {
         resolve(parsed.result);
       });
     });
-  }
-
-  generateToken() {
-    return new uuidv4()
   }
 
   setInvokePrefix(invokePathPrefix) {
