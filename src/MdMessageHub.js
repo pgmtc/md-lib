@@ -138,6 +138,7 @@ export default class MdMessageHub {
           return
         }
 
+        log.debug('Parsed response', parsed)
         if (parsed.jobId) {
           // Called method is a job - return token to the client
           resolve(parsed.jobId)
