@@ -1,2 +1,2 @@
 # md-lib
-mDesktop library for client commons
+mDesktop library for portlet commons
