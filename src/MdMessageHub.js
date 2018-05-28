@@ -45,11 +45,11 @@ export default class MdMessageHub {
     this.nats.publish(subject, message)
   }
 
-  expose(method) {
+  expose(method, overrideMethodName) {
     if (!method || typeof(method) !== 'function') {
       throw new Error('Expose needs to be provided a function object')
     }
-    var endpoint = [this.msgHubId, this.clientId, MdUtils.getFunctionName(method)].join('.')
+    var endpoint = [this.msgHubId, this.clientId, overrideMethodName || MdUtils.getFunctionName(method)].join('.')
 
     let handlerArguments = MdUtils.getFunctionParameters(method);
     log.info(`Exposing ${endpoint}(${handlerArguments.join(', ')})`)
@@ -94,7 +94,7 @@ export default class MdMessageHub {
       let result = method.apply(this, [job].concat(parameters))
       return jobId
     }
-    this.expose(methodWrapper)
+    this.expose(methodWrapper, MdUtils.getFunctionName(method))
   }
 
   invoke(endpoint, ...parameters) {
