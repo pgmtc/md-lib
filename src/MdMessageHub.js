@@ -138,9 +138,11 @@ export default class MdMessageHub {
           return
         }
 
-        log.debug('Parsed response', parsed)
+        console.log('parsed response')
+        console.log(parsed)
         if (parsed.jobId) {
           // Called method is a job - return token to the client
+          log.debug('Invoked method is a JOB')
           resolve(parsed.jobId)
           // Start the job on remote server
           this.nats.publish(parsed.endpoint);
