@@ -2,7 +2,6 @@
   "name": "md-lib",
   "version": "1.0.18",
   "description": "Dependency library for modular desktop portlets",
-  "main": "lib/index.js",
   "scripts": {
     "test": "standard",
     "standard": "standard --fix",
