@@ -17,7 +17,6 @@ export default class MdPortletServer {
     this.invoke = this.msgHub::this.msgHub.invoke
     this.expose = this.msgHub::this.msgHub.expose
     this.publish = this.msgHub::this.msgHub.publish
-    this.subscribe = this.msgHub::this.msgHub.subscribe
     this.msgHub.connect(MSGHUB_SERVER).then(() => {
       // Proxy invoke and expose methods
     }, (err) => {
