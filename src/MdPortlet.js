@@ -79,6 +79,6 @@ export default class MdPortlet {
   }
 
   makeApiUrl (method, params) {
-    return '/md/api' + (this.context.def.dataPrefix || this.context.def.url || '') + method + '/' + this.encodeParams(params)
+    return '/md/api' + (this.context.def.dataPrefix || this.context.def.url || '') + method + '/' + MdUtils.encodeApiParams(params)
   }
 }
