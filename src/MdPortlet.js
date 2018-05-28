@@ -93,10 +93,15 @@ export default class MdPortlet {
     })
   }
 
-  broadcast (subject, message) {
+  httpBroadcast (subject, message) {
     var url = this.context.wsEndpointUrl + '/' + subject + '/' + encodeURI(JSON.stringify(message))
     console.log(url)
     this.httpGet(url, true)
+  }
+
+  broadcast (subject, message) {
+    let socket = this.getSocket()
+    socket.emit(subject, message)
   }
 
   emit (subject, message) {
