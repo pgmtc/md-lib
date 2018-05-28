@@ -73,6 +73,14 @@ export default class MdPortlet {
     socket.emit(subject, message)
   }
 
+  wsOn (event, handler) {
+    var endpoint = this.constructor.name + '.' + this.context.def.id + ':' + event
+    console.log(endpoint);
+    this.getSocket().on(endpoint, (msg) => {
+      handler.call(this, msg)
+    })
+  }
+
   makeApiUrl (method, params) {
     return this.context.apiEndpointUrl + (this.context.def.dataPrefix || this.context.def.url || '') + method + '/' + MdUtils.encodeApiParams(params)
   }
