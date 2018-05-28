@@ -1,5 +1,4 @@
 import util from 'util'
-const MSGHUB_ID = process.env.MSGHUB_ID || 'mdesktop'
 var STRIP_COMMENTS = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/mg
 var ARGUMENT_NAMES = /([^\s,]+)/g
 
@@ -22,7 +21,7 @@ export default class MdUtils {
     return fName
   }
 
-  static getRestApiParams (encoded) {
+  static decodeApiParams (encoded) {
     let parsed = decodeURIComponent(encoded)
     try {
       parsed = JSON.parse(parsed)
@@ -32,18 +31,8 @@ export default class MdUtils {
     return parsed
   }
 
-  static async handleApiCall (req, res, next) {
-    var component = req.params.component
-    var method = req.params.method
-    var params = MdUtils.getRestApiParams(req.params.params)
-
-    // Invoke function
-    try {
-      var endpoint = MSGHUB_ID + '.' + component + '.' + method
-      var results = await this.invoke.apply(this, [endpoint].concat(params))
-      res.send(results)
-    } catch (err) {
-      res.status(500).send(err.message)
-    }
+  static encodeApiParams (decoded) {
+    var encoded = encodeURIComponent(JSON.stringify(decoded))
+    return encoded
   }
 }

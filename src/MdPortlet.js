@@ -1,65 +1,80 @@
-import PortletContext from './MdPortletContext';
+import PortletContext from './MdPortletContext'
+import MdUtils from './MdUtils'
 
 export default class MdPortlet {
-  constructor() {
-    this.children = [];
+  constructor () {
+    this.children = []
     this.createChildren((elementType) => {
-      var element = document.createElement(elementType);
-      this.children.push(element);
-      return element;
-    });
+      var element = document.createElement(elementType)
+      this.children.push(element)
+      return element
+    })
   }
 
-  register(intoElement, context) {
-    console.log('register');
-    this.context = context || PortletContext.emptyContext();
-    intoElement.innerHTML = '';
+  register (intoElement, context) {
+    console.log('register')
+    this.context = context || PortletContext.emptyContext()
+    intoElement.innerHTML = ''
     this.children.forEach((child) => {
-      intoElement.appendChild(child);
-    });
-    this.loaded();
+      intoElement.appendChild(child)
+    })
+    this.loaded()
   }
 
-  createChildren() {
-    console.warn('createChildren should be overridden');
+  createChildren () {
+    console.warn('createChildren should be overridden')
   }
 
-  loaded() {
-    console.warn('loaded should be overridden');
+  loaded () {
+    console.warn('loaded should be overridden')
   }
 
-  async httpGet(path) {
+  async httpGet (path) {
     if (!this.context.axios) {
-      throw('axios have not been provided to the portlet');
+      throw new Error('axios have not been provided to the portlet')
     }
     try {
-      const response = await this.context.axios.get(this.makeUrl(path));
-      return response.data;
+      const response = await this.context.axios.get(this.makeUrl(path))
+      return response.data
     } catch (err) {
-      this.context.api.error('Error when loading data: ' + err.message);
+      this.context.api.error('Error when loading data: ' + err.message)
     }
   }
 
-  async httpPost(path, data) {
+  async httpPost (path, data) {
     if (!this.context.axios) {
-      throw('axios have not been provided to the portlet');
+      throw new Error('axios have not been provided to the portlet')
     }
     try {
-      const response = await this.context.axios.post(this.makeUrl(path, data));
-      return response.data;
+      const response = await this.context.axios.post(this.makeUrl(path, data))
+      return response.data
     } catch (err) {
-      this.context.api.error('Error when loading data: ' + err.message);
+      this.context.api.error('Error when loading data: ' + err.message)
     }
   }
 
-  getSocket() {
+  getSocket () {
     if (!this.context.socket) {
-      throw('socket object has not been provided to the portlet');
+      throw new Error('socket object has not been provided to the portlet')
     }
-    return this.context.socket;
+    return this.context.socket
   }
 
-  makeUrl(path) {
-    return (this.context.def.dataPrefix || this.context.def.url || '') + path;
+  makeUrl (path) {
+    return (this.context.def.dataPrefix || this.context.def.url || '') + path
   }
+
+  async api (method, params) {
+    if (!this.context.axios) {
+      throw new Error('axios have not been provided to the portlet')
+    }
+    var url = this.makeApiUrl(method, params)
+    var results = await this.context.axios.get(url)
+    return results.data
+  }
+
+  makeApiUrl (method, params) {
+    return '/md/api' + (this.context.def.dataPrefix || this.context.def.url || '') + method + '/' + this.encodeParams(params)
+  }
+
 }
