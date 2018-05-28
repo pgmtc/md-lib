@@ -62,6 +62,37 @@ export default class MdPortlet {
     }
   }
 
+  async job (methodName, params, messageHandler) {
+    return new Promise(async (resolve, reject) => {
+      var doneHandler = (result) => {
+        resolve(result)
+        detach()
+      }
+
+      var errorHandler = (result) => {
+        reject(result)
+        detach()
+      }
+
+      var msgHandler = (result) => {
+        if (typeof messageHandler === 'function') {
+          messageHandler(result)
+        }
+      }
+
+      var detach = () => {
+        this.getSocket().removeListener(`worker.${token}:done`, doneHandler)
+        this.getSocket().removeListener(`worker.${token}:error`, errorHandler)
+        this.getSocket().removeListener(`worker.${token}:message`, msgHandler)
+      }
+
+      var token = await this.api(methodName, params);
+      this.getSocket().on(`worker.${token}:done`, doneHandler)
+      this.getSocket().on(`worker.${token}:error`, errorHandler)
+      this.getSocket().on(`worker.${token}:message`, msgHandler)
+    })
+  }
+
   broadcast (subject, message) {
     var url = this.context.wsEndpointUrl + '/' + subject + '/' + encodeURI(JSON.stringify(message))
     console.log(url)
