@@ -101,10 +101,8 @@ export default class MdMessageHub {
 
       // Pass back endpoint and job id
       return {
-        err: 0,
         jobId: jobId,
-        endpoint: runEndpoint,
-        from: os.hostname()
+        endpoint: runEndpoint
       }
     }
     this.expose(methodWrapper, MdUtils.getFunctionName(method))
@@ -138,14 +136,12 @@ export default class MdMessageHub {
           return
         }
 
-        console.log('parsed response')
-        console.log(parsed)
-        if (parsed.jobId) {
+        if (parsed.result && parsed.result.jobId) {
           // Called method is a job - return token to the client
-          log.debug('Invoked method is a JOB')
-          resolve(parsed.jobId)
+          log.debug(`Invoked method is a JOB with id ${parsed.result.jobId}`)
+          resolve(parsed.result.jobId)
           // Start the job on remote server
-          this.nats.publish(parsed.endpoint);
+          this.nats.publish(parsed.result.endpoint);
           return
         }
 
