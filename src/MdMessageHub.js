@@ -97,7 +97,7 @@ export default class MdMessageHub {
       let runHandler = () => {
         method.apply(this, [job].concat(parameters))
       }
-      this.nats.subscribe(runEndpoint, runHandler;
+      this.nats.subscribe(runEndpoint, runHandler)
 
       // Pass back endpoint and job id
       return {
