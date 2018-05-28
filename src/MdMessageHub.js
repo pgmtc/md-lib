@@ -75,6 +75,28 @@ export default class MdMessageHub {
     })
   }
 
+  exposeAsync(method) {
+    var methodWrapper = (...parameters) => {
+      let jobId = uuid().replace(/-/g, '')
+      let subject = 'ws.worker.' + jobId
+
+      let job = {
+        progress: (msg) => {
+          this.publish('ws.worker.' + jobId + ':message', msg);
+        },
+        error: (msg) => {
+          this.publish('ws.worker.' + jobId + ':error', msg);
+        },
+        done: () => {
+          this.publish('ws.worker.' + jobId + ':done', msg);
+        }
+      }
+      let result = method.apply(this, [job].concat(parameters))
+      return jobId
+    }
+    this.expose(methodWrapper)
+  }
+
   invoke(endpoint, ...parameters) {
     if (this.invokePathPrefix) {
       endpoint = this.invokePathPrefix + endpoint
