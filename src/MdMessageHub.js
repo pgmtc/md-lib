@@ -92,8 +92,20 @@ export default class MdMessageHub {
           this.publish(subject + ':done', msg);
         }
       }
-      let result = method.apply(this, [job].concat(parameters))
-      return jobId
+      // Subscribe run endpoint
+      let runEndpoint = subject + ':run';
+      let runHandler = () => {
+        method.apply(this, [job].concat(parameters))
+      }
+      this.nats.subscribe(runEndpoint, runHandler;
+
+      // Pass back endpoint and job id
+      return {
+        err: 0,
+        jobId: jobId,
+        endpoint: runEndpoint,
+        from: os.hostname()
+      }
     }
     this.expose(methodWrapper, MdUtils.getFunctionName(method))
   }
@@ -123,6 +135,14 @@ export default class MdMessageHub {
         // Remote problem
         if (parsed.err) {
           reject(new Error(`Invoke error: ${endpoint} responded with error: ${parsed.message}` || 'unknown error'));
+          return
+        }
+
+        if (parsed.jobId) {
+          // Called method is a job - return token to the client
+          resolve(parsed.jobId)
+          // Start the job on remote server
+          this.nats.publish(parsed.endpoint);
           return
         }
 
