@@ -30,8 +30,11 @@ export default class MdMessageHub {
   }
 
   disconnect() {
-    this.nats.close();
-    log.info('Disconnected from NATS');
+    if (this.nats) {
+      this.nats.close();
+      log.info('Disconnected from NATS');
+    }
+
   }
 
   broadcastReceiveHandler(msg, reply, subject) {
