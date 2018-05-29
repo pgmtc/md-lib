@@ -41,6 +41,7 @@ export default class MdPortletServer {
   }
 
   listen (port) {
+    this.listenPort = port
     if (this.portletLocation) {
       this.app.use('/', ::this.servePortlet)
     }
