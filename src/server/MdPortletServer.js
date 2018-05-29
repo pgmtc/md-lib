@@ -37,7 +37,7 @@ export default class MdPortletServer {
 
   listen(port) {
     this.app = express()
-    this.app.use(this.getRestApi())
+    this.app.use('/', this.getRestApi())
     this.app.listen(port, (err) => {
       if (err) {
         log.error('Cannot start the server on port ' + port)
