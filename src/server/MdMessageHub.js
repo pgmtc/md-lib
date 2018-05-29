@@ -3,7 +3,6 @@ import log from './logger'
 import MdUtils from './MdUtils'
 import os from 'os'
 import uuid from 'uuid/v4'
-
 const MSGHUB_TIMEOUT = process.env.MSGHUB_TIMEOUT || 1000
 
 export default class MdMessageHub {
