@@ -29,6 +29,7 @@ export default class MdPortletServer {
     this.expose = this.msgHub::this.msgHub.expose
     this.exposeJob = this.msgHub::this.msgHub.exposeJob
     this.publish = this.msgHub::this.msgHub.publish
+    this.subscribe = this.msgHub::this.msgHub.subscribe
     this.msgHub.connect(MSGHUB_SERVER).then(() => {
       log.info('Success when connecting to messaging server ' + MSGHUB_SERVER)
     }, (err) => {
