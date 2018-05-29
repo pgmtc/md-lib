@@ -2,7 +2,11 @@ import PortletContext from './MdPortletContext'
 import MdUtils from '../server/MdUtils'
 
 export default class MdPortlet {
-  constructor () {
+  constructor (id) {
+    if (!id) {
+      console.warn('id parameter was not provided to the constructor. This will break the API communication')
+    }
+    this.id = id
     this.children = []
     this.createChildren((elementType) => {
       var element = document.createElement(elementType)
@@ -118,7 +122,7 @@ export default class MdPortlet {
   }
 
   makeApiUrl (method, params) {
-    return (this.context.apiEndpointUrl || '') + '/' + (this.context.def.dataPrefix || this.context.def.url || '') + method + '/' + MdUtils.encodeApiParams(params)
+    return (this.context.apiEndpointUrl || '') + '/' + ((this.id + '/') || '') + method + '/' + MdUtils.encodeApiParams(params)
   }
 
   makeUrl (path) {
