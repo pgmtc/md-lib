@@ -50,7 +50,7 @@ export default class MdMessageHub {
   }
 
   subscribe(subject, handler) {
-    this.nats.publish(subject, handler)
+    this.nats.subscribe(subject, handler)
   }
 
   expose(method, overrideMethodName) {
