@@ -1,7 +1,7 @@
 import MdMessageHub from './MdMessageHub'
-import MdPortlet from './MdPortlet'
+import MdPortletServer from './MdPortletServer'
 import MdUtils from './MdUtils'
 
 export {
-  MdMessageHub, MdPortlet, MdUtils
+  MdMessageHub, MdPortletServer, MdUtils
 }
