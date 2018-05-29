@@ -59,7 +59,7 @@ export default class MdPortletServer {
     return router
   }
 
-  async servePortlet (req, res, next) {
+  servePortlet (req, res, next) {
     res.sendFile(path.join(appDir, this.portletLocation))
   }
 
