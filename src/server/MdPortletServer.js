@@ -6,7 +6,7 @@ import MdUtils from './MdUtils'
 
 const MSGHUB_SERVER = process.env.MSGSERVER || undefined
 const MSGHUB_ID = process.env.MSGHUB_ID || 'mdesktop'
-const app = express()
+const appDir = path.dirname(require.main.filename)
 
 export default class MdPortletServer {
   constructor (id, portletLocation) {
@@ -35,6 +35,8 @@ export default class MdPortletServer {
       log.error('Error when connecting to messaging server', err)
       process.exit(1)
     })
+
+    this.app = express()
   }
 
   listen (port) {
@@ -77,8 +79,11 @@ export default class MdPortletServer {
     }
   }
 
-  destructor () {
+  destructor (err) {
     this.msgHub.disconnect()
+    if (err) {
+      log.error(err);
+    }
     process.exit(1)
   }
 
