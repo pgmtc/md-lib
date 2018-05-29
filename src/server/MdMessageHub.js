@@ -12,6 +12,7 @@ export default class MdMessageHub {
   }
 
   connect(msgServer) {
+    log.debug('Connecting to NATS: ' + msgServer)
     return new Promise((resolve, reject) => {
       this.nats = NATS.connect(msgServer)
       this.nats.on('error', err => {
