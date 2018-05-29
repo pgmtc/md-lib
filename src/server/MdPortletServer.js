@@ -38,6 +38,16 @@ export default class MdPortletServer {
     })
 
     this.app = express()
+
+    // Listen for service discovery calls
+    this.subscribe('mdPing', (token) => {
+      var info = {
+        ip: ip.address(),
+        port: this.listenPort,
+        type: this.id
+      }
+      this.publish(token, JSON.stringify(info))
+    })
   }
 
   listen (port) {
