@@ -1,4 +1,4 @@
-import PortletContext from './MdPortletContext'
+import PortletContext from '../client/MdPortletContext'
 import MdUtils from './MdUtils'
 
 export default class MdPortlet {

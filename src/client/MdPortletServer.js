@@ -1,7 +1,7 @@
 import express from 'express'
-import log from './logger'
-import MdMessageHub from './MdMessageHub'
-import MdUtils from "./MdUtils"
+import log from '../server/logger'
+import MdMessageHub from '../server/MdMessageHub'
+import MdUtils from "../server/MdUtils"
 const MSGHUB_SERVER = process.env.MSGSERVER || undefined
 const MSGHUB_ID = process.env.MSGHUB_ID || 'mdesktop'
 

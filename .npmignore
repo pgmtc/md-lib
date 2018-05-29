@@ -1,3 +1,8 @@
 /node_modules/
 /.idea/
 .babelrc
+.editorconfig
+.gitignore
+.npmignore
+package-lock.json
+src
