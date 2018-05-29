@@ -49,6 +49,10 @@ export default class MdMessageHub {
     this.nats.publish(subject, message)
   }
 
+  subscribe(subject, handler) {
+    this.nats.publish(subject, handler)
+  }
+
   expose(method, overrideMethodName) {
     if (!method || typeof(method) !== 'function') {
       throw new Error('Expose needs to be provided a function object')
