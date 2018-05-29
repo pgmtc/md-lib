@@ -4,7 +4,7 @@ import log from './logger'
 import MdMessageHub from './MdMessageHub'
 import MdUtils from './MdUtils'
 
-const MSGHUB_SERVER = process.env.MSGSERVER || undefined
+const MSGHUB_SERVER = process.env.MSGHUB_SERVER || undefined
 const MSGHUB_ID = process.env.MSGHUB_ID || 'mdesktop'
 const appDir = path.dirname(require.main.filename)
 
