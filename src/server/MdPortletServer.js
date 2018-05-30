@@ -44,11 +44,15 @@ export default class MdPortletServer {
     // Listen for service discovery calls
     this.subscribe('mdPing', async (token) => {
       const cpuData = await si.cpu()
+      const memData = await si.mem()
+      const loadData = await si.currentLoad()
       var info = {
         ip: ip.address(),
         port: this.listenPort,
         type: this.id,
-        cpuData: cpuData
+        cpuData: cpuData,
+        memData: memData,
+        loadData: loadData
       }
       this.publish(token, JSON.stringify(info))
     })
