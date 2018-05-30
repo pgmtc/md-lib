@@ -18,7 +18,9 @@
     "babel-preset-es2015": "^6.24.1",
     "standard": "^11.0.1"
   },
-  "dependencies": {},
+  "dependencies": {
+    "systeminformation": "^3.41.4"
+  },
   "peerDependencies": {
     "express": "4.x",
     "nats": ">=0.8",

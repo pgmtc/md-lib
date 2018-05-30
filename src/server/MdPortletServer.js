@@ -1,6 +1,7 @@
 import express from 'express'
 import path from 'path'
 import ip from 'ip'
+import si from 'systeminformation'
 import log from './logger'
 import MdMessageHub from './MdMessageHub'
 import MdUtils from './MdUtils'
@@ -41,11 +42,13 @@ export default class MdPortletServer {
     this.app = express()
 
     // Listen for service discovery calls
-    this.subscribe('mdPing', (token) => {
+    this.subscribe('mdPing', async (token) => {
+      const cpuData = await si.cpu()
       var info = {
         ip: ip.address(),
         port: this.listenPort,
-        type: this.id
+        type: this.id,
+        cpuData: cpuData
       }
       this.publish(token, JSON.stringify(info))
     })
@@ -95,7 +98,7 @@ export default class MdPortletServer {
   destructor (err) {
     this.msgHub.disconnect()
     if (err) {
-      log.error(err);
+      log.error(err)
     }
     process.exit(1)
   }
