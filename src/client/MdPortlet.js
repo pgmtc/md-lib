@@ -16,7 +16,6 @@ export default class MdPortlet {
   }
 
   register (intoElement, context) {
-    console.log('register')
     this.context = context || PortletContext.emptyContext()
     intoElement.innerHTML = ''
     this.children.forEach((child) => {
@@ -99,7 +98,6 @@ export default class MdPortlet {
 
   broadcast (subject, message) {
     var url = this.context.wsEndpointUrl + '/' + subject + '/' + encodeURI(JSON.stringify(message))
-    console.log(url)
     this.httpGet(url, true)
   }
 
