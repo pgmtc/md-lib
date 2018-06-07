@@ -76,7 +76,7 @@ export default class MdPortletServer {
 
   exposeDelete (path, handler) {
     log.info(`Exposing [DELETE] /api${path}`)
-    router.delete(path, handler)
+    this.apiRouter.delete(path, handler)
   }
 
   listen (port) {
