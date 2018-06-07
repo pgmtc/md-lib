@@ -40,6 +40,7 @@ export default class MdPortletServer {
     })
 
     this.app = express()
+    this.apiRouter = express.Router()
 
     // Listen for service discovery calls
     this.subscribe('mdPing', async (token) => {
@@ -58,13 +59,29 @@ export default class MdPortletServer {
     })
   }
 
+  exposeGet (path, handler) {
+    log.info(`Exposing [GET] /api/${path}`)
+    this.apiRouter.get(path, handler)
+  }
+
+  exposePost (path, handler) {
+    log.info(`Exposing [POST] /api/${path}`)
+    this.apiRouter.post(path, handler)
+  }
+
+  exposePut (path, handler) {
+    log.info(`Exposing [PUT] /api/${path}`)
+    this.apiRouter.put(path, handler)
+  }
+
+  exposeDelete (path, handler) {
+    log.info(`Exposing [DELETE] /api/${path}`)
+    router.delete(path, handler)
+  }
+
   listen (port) {
     this.listenPort = port
-
-    this.apiRouter = express.Router()
     if (typeof this.getRestApi === 'function') {
-      log.debug('REST API provided by the portlet, will be available at /api/*')
-      this.getRestApi(this.apiRouter)
       this.app.use('/api', this.apiRouter)
     } else {
       log.debug('no REST API provided by the portlet')
@@ -82,10 +99,6 @@ export default class MdPortletServer {
       }
       log.info('Server running on *:' + port)
     })
-  }
-
-  getRestApi (router) {
-
   }
 
   servePortlet (req, res, next) {
