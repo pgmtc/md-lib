@@ -103,7 +103,6 @@ export default class MdPortlet {
 
   wsOn (event, handler) {
     var endpoint = this.constructor.name + '.' + this.context.def.id + ':' + event
-    console.log(endpoint)
     this.getSocket().on(endpoint, (msg) => {
       handler.call(this, msg)
     })
