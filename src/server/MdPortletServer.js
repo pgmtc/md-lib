@@ -60,33 +60,28 @@ export default class MdPortletServer {
   }
 
   exposeGet (path, handler) {
-    log.info(`Exposing [GET] /api/${path}`)
+    log.info(`Exposing [GET] /api${path}`)
     this.apiRouter.get(path, handler)
   }
 
   exposePost (path, handler) {
-    log.info(`Exposing [POST] /api/${path}`)
+    log.info(`Exposing [POST] /api${path}`)
     this.apiRouter.post(path, handler)
   }
 
   exposePut (path, handler) {
-    log.info(`Exposing [PUT] /api/${path}`)
+    log.info(`Exposing [PUT] /api${path}`)
     this.apiRouter.put(path, handler)
   }
 
   exposeDelete (path, handler) {
-    log.info(`Exposing [DELETE] /api/${path}`)
+    log.info(`Exposing [DELETE] /api${path}`)
     router.delete(path, handler)
   }
 
   listen (port) {
     this.listenPort = port
-    if (typeof this.getRestApi === 'function') {
-      this.app.use('/api', this.apiRouter)
-    } else {
-      log.debug('no REST API provided by the portlet')
-    }
-
+    this.app.use('/api', this.apiRouter)
 
     if (this.portletLocation) {
       this.app.use('/', ::this.servePortlet)
