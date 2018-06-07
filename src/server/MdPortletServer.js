@@ -63,7 +63,13 @@ export default class MdPortletServer {
     if (this.portletLocation) {
       this.app.use('/', ::this.servePortlet)
     }
-    this.app.use('/api', this.getRestApi())
+
+    this.apiRouter = express.Router()
+    if (typeof this.getRestApi === 'function') {
+      this.getRestApi(this.apiRouter)
+      this.app.use('/api', this.apiRouter)
+    }
+
     this.app.listen(port, (err) => {
       if (err) {
         log.error('Cannot start the server on port ' + port)
@@ -74,11 +80,8 @@ export default class MdPortletServer {
     })
   }
 
-  getRestApi () {
-    var router = express.Router()
-    router.get('/:methodName/:methodParams', ::this.handleApiCall)
-    router.get('/:methodName/', ::this.handleApiCall)
-    return router
+  getRestApi (router) {
+
   }
 
   servePortlet (req, res, next) {
