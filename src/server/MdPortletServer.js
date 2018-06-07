@@ -60,16 +60,20 @@ export default class MdPortletServer {
 
   listen (port) {
     this.listenPort = port
-    if (this.portletLocation) {
-      this.app.use('/', ::this.servePortlet)
-    }
 
     this.apiRouter = express.Router()
     if (typeof this.getRestApi === 'function') {
+      log.debug('REST API provided by the portlet, will be available at /api/*')
       this.getRestApi(this.apiRouter)
       this.app.use('/api', this.apiRouter)
+    } else {
+      log.debug('no REST API provided by the portlet')
     }
 
+
+    if (this.portletLocation) {
+      this.app.use('/', ::this.servePortlet)
+    }
     this.app.listen(port, (err) => {
       if (err) {
         log.error('Cannot start the server on port ' + port)
