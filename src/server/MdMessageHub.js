@@ -117,6 +117,7 @@ export default class MdMessageHub {
         }
       }
       this.nats.publish(replyTo, JSON.stringify(response));
+      this.msgHubLog(CODE.DONE)
     })
   }
 
@@ -140,8 +141,8 @@ export default class MdMessageHub {
       // Subscribe run endpoint
       let runEndpoint = subject + ':run';
       let runHandler = () => {
-        this.msgHubLog(CODE.JOB)
         method.apply(this, [job].concat(parameters))
+        this.msgHubLog(CODE.JOB)
       }
       this.nats.subscribe(runEndpoint, runHandler)
 
