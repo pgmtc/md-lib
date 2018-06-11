@@ -1,5 +1,5 @@
 import MdPortlet from './MdPortlet'
-import MdPortletContext from './MdPortletContext'
+import EmptyContext from './MdPortletContext'
 export {
-  MdPortlet, MdPortletContext
+  MdPortlet, EmptyContext
 }

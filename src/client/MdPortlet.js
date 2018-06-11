@@ -1,4 +1,4 @@
-import PortletContext from './MdPortletContext'
+import EmptyContext from './EmptyContext'
 import MdUtils from '../server/MdUtils'
 
 export default class MdPortlet {
@@ -16,7 +16,7 @@ export default class MdPortlet {
   }
 
   register (intoElement, context) {
-    this.context = context || PortletContext.emptyContext()
+    this.context = context || EmptyContext.create()
     intoElement.innerHTML = ''
     this.children.forEach((child) => {
       intoElement.appendChild(child)
