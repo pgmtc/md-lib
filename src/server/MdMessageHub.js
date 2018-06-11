@@ -123,7 +123,7 @@ export default class MdMessageHub {
   exposeJob(method) {
     var methodWrapper = (...parameters) => {
       let jobId = uuid().replace(/-/g, '')
-      let subject = 'ws.worker.' + jobId
+      let subject = this.msgHubId + '.ws.worker.' + jobId
 
       let job = {
         progress: (msg) => {
