@@ -7,13 +7,14 @@ import uuid from 'uuid/v4'
 import si from 'systeminformation'
 const MSGHUB_TIMEOUT = process.env.MSGHUB_TIMEOUT || 1000
 
-const MSGHUB_DBG_DISCONNECT = 0
-const MSGHUB_DBG_CONNECT = 1
-const MSGHUB_DBG_INVOKE = 2
-const MSGHUB_DBG_JOB = 3
-const MSGHUB_DBG_DONE = 4
-const MSGHUB_DBG_PING = 5
-
+const CODE = {
+  DISCONNECT: {code: 0, label: 'Disconnected'},
+  CONNECT:    {code: 1, label: 'Connected'},
+  INVOKE:     {code: 2, label: 'Invoked'},
+  JOB:        {code: 3, label: 'Job started'},
+  DONE:       {code: 4, label: 'Job done'},
+  PING:       {code: 5, label: 'Ping'}
+}
 
 export default class MdMessageHub {
   constructor(msgHubId, clientType) {
@@ -35,7 +36,7 @@ export default class MdMessageHub {
         this.nats.subscribe(this.msgHubId + '', ::this.broadcastReceiveHandler);
         this.nats.subscribe(this.msgHubId + '.' + this.clientType, ::this.messageReceiveHandler);
         log.info('Subscribed to queue ' + this.msgHubId + '.' + this.clientType);
-        this.msgHubLog(MSGHUB_DBG_CONNECT)
+        this.msgHubLog(CODE.CONNECT)
         this.registerServiceDiscovery()
         resolve();
       })
@@ -45,7 +46,7 @@ export default class MdMessageHub {
   registerServiceDiscovery() {
     // Listen for service discovery calls
     this.subscribe('mdPing', async (token) => {
-      this.msgHubLog(MSGHUB_DBG_PING)
+      this.msgHubLog(CODE.PING)
       const cpuData = await si.cpu()
       const memData = await si.mem()
       const loadData = await si.currentLoad()
@@ -63,7 +64,7 @@ export default class MdMessageHub {
 
   disconnect() {
     if (this.nats) {
-      this.msgHubLog(MSGHUB_DBG_DISCONNECT)
+      this.msgHubLog(CODE.DISCONNECT)
       this.nats.close();
       log.info('Disconnected from NATS');
     }
@@ -101,7 +102,7 @@ export default class MdMessageHub {
     this.subscribeQueue(endpoint, 'workers', (request, replyTo) => {
       let parameters = JSON.parse(request);
       var response = {};
-      this.msgHubLog(MSGHUB_DBG_INVOKE)
+      this.msgHubLog(CODE.INVOKE)
       try {
         response = {
           err: 0,
@@ -132,14 +133,14 @@ export default class MdMessageHub {
           this.publish(subject + ':error', msg);
         },
         done: (msg) => {
-          this.msgHubLog(MSGHUB_DBG_DONE)
+          this.msgHubLog(CODE.DONE)
           this.publish(subject + ':done', msg);
         }
       }
       // Subscribe run endpoint
       let runEndpoint = subject + ':run';
       let runHandler = () => {
-        this.msgHubLog(MSGHUB_DBG_JOB)
+        this.msgHubLog(CODE.JOB)
         method.apply(this, [job].concat(parameters))
       }
       this.nats.subscribe(runEndpoint, runHandler)
@@ -201,9 +202,9 @@ export default class MdMessageHub {
 
   }
 
-  msgHubLog(code) {
+  msgHubLog(event) {
     let logItem = {
-      event: code,
+      event: event,
       id: this.clientId,
       ip: ip.address(),
       type: this.clientType
