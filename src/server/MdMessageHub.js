@@ -13,7 +13,7 @@ const CODE = {
   INVOKE:     {code: 2, label: 'Invoked'},
   JOB:        {code: 3, label: 'Job started'},
   DONE:       {code: 4, label: 'Job done'},
-  PING:       {code: 5, label: 'Ping'}
+  PONG:       {code: 5, label: 'Pong'}
 }
 
 export default class MdMessageHub {
@@ -46,7 +46,7 @@ export default class MdMessageHub {
   registerServiceDiscovery() {
     // Listen for service discovery calls
     this.subscribe('mdPing', async (token) => {
-      this.msgHubLog(CODE.PING)
+      this.msgHubLog(CODE.PONG)
       const cpuData = await si.cpu()
       const memData = await si.mem()
       const loadData = await si.currentLoad()
