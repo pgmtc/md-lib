@@ -26,7 +26,7 @@ export default class MdPortlet {
     this.httpGet = ::this.ctx.httpGet
     this.apiCall = ::this.ctx.apiCall
     this.apiJob = ::this.ctx.apiJob
-    this.broadCast = ::this.ctx.broadCast
+    this.broadcast = ::this.ctx.broadcast
 
 
     this.loaded()
