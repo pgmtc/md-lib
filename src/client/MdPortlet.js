@@ -23,11 +23,20 @@ export default class MdPortlet {
     this.children.forEach((child) => {
       intoElement.appendChild(child)
     })
+
+    // Pass references to the portlet
     this.httpGet = ::this.ctx.httpGet
     this.apiCall = ::this.ctx.apiCall
     this.apiJob = ::this.ctx.apiJob
     this.broadcast = ::this.ctx.broadcast
 
+    // Event helper methods
+    this.wsOn = (event, handler) => {
+      this.ctx.socket.on(event, handler)
+    }
+    this.onRefresh = (handler) => {
+      this.ctx.socket.on('refresh', handler)
+    }
 
     this.loaded()
   }
