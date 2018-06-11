@@ -38,11 +38,11 @@ export default class Context {
   }
 
   get API_ENDPOINT_URL () {
-    return this._WS_ENDPOINT_URL
+    return this._API_ENDPOINT_URL
   }
 
   set API_ENDPOINT_URL (value) {
-    this._WS_ENDPOINT_URL = value
+    this._API_ENDPOINT_URL = value
   }
 
   get api () {
@@ -111,7 +111,7 @@ export default class Context {
         this.socket.removeListener(`worker.${token}:message`, msgHandler)
       }
 
-      var token = await this.api(methodName, params)
+      var token = await this.apiCall(methodName, params)
       this.socket.on(`worker.${token}:done`, doneHandler)
       this.socket.on(`worker.${token}:error`, errorHandler)
       this.socket.on(`worker.${token}:message`, msgHandler)
