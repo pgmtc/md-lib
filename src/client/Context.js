@@ -1,3 +1,5 @@
+import MdUtils from '../server/MdUtils'
+
 export default class Context {
   get def () {
     return this._def
@@ -127,6 +129,6 @@ export default class Context {
   }
 
   _makeApiUrl (method, params) {
-    // return (this.API_ENDPOINT_URL || '') + '/' + ((this.def.id + '/') || '') + method + '/' + MdUtils.encodeApiParams(params)
+    return (this.API_ENDPOINT_URL || '') + '/' + ((this.def.id + '/') || '') + method + '/' + MdUtils.encodeApiParams(params)
   }
 }
