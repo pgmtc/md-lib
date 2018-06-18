@@ -81,7 +81,7 @@ export default class Context {
     }
   }
 
-  async grcp (method, params) {
+  async grpc (method, params) {
     if (!this.axios) {
       throw new Error('axios have not been provided to the portlet')
     }
