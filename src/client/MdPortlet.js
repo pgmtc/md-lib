@@ -29,6 +29,7 @@ export default class MdPortlet {
     this.apiCall = ::this.ctx.apiCall
     this.apiJob = ::this.ctx.apiJob
     this.broadcast = ::this.ctx.broadcast
+    this.grpc = ::this.ctx.grpc
 
     // Event helper methods
     this.wsOn = (event, handler) => {
