@@ -45,6 +45,14 @@ export default class Context {
     this._API_ENDPOINT_URL = value
   }
 
+  get GRPC_ENDPOINT_URL () {
+    return this._GRPC_ENDPOINT_URL
+  }
+
+  set GRPC_ENDPOINT_URL (value) {
+    this._GRPC_ENDPOINT_URL = value
+  }
+
   get api () {
     return {
       inProgress: (value) => {
@@ -68,6 +76,20 @@ export default class Context {
     try {
       const response = await this.axios.get(noUrlFix ? path : this._makeUrl(path))
       return response.data
+    } catch (err) {
+      this.api.error('Error when loading data: ' + err.message)
+    }
+  }
+
+  async grcp (method, params) {
+    if (!this.axios) {
+      throw new Error('axios have not been provided to the portlet')
+    }
+
+    try {
+      var url = this._makeApiUrl(method, params)
+      var results = await this.axios.get(url)
+      return results.data
     } catch (err) {
       this.api.error('Error when loading data: ' + err.message)
     }
@@ -130,5 +152,9 @@ export default class Context {
 
   _makeApiUrl (method, params) {
     return (this.API_ENDPOINT_URL || '') + '/' + ((this.def.id + '/') || '') + method + '/' + MdUtils.encodeApiParams(params)
+  }
+
+  _mageGrpcUrl (method, params) {
+    return (this.GRPC_ENDPOINT_URL || '') + '/' + ((this.def.id + '/') || '') + method + '/' + MdUtils.encodeApiParams(params)
   }
 }
