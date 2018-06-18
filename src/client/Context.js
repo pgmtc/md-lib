@@ -87,7 +87,7 @@ export default class Context {
     }
 
     try {
-      var url = this._makeApiUrl(method, params)
+      var url = this._makeGrpcUrl(method, params)
       var results = await this.axios.get(url)
       return results.data
     } catch (err) {
@@ -154,7 +154,7 @@ export default class Context {
     return (this.API_ENDPOINT_URL || '') + '/' + ((this.def.id + '/') || '') + method + '/' + MdUtils.encodeApiParams(params)
   }
 
-  _mageGrpcUrl (method, params) {
+  _makeGrpcUrl (method, params) {
     return (this.GRPC_ENDPOINT_URL || '') + '/' + ((this.def.id + '/') || '') + method + '/' + MdUtils.encodeApiParams(params)
   }
 }
