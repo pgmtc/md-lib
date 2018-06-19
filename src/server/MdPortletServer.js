@@ -42,7 +42,7 @@ export default class MdPortletServer {
     this.app = express()
     this.apiRouter = express.Router()
 
-    this.grcpServer = new grpc.Server()
+    this.grpcServer = new grpc.Server()
   }
 
   exposeGet (path, handler) {
@@ -124,7 +124,7 @@ export default class MdPortletServer {
     try {
       this.msgHub.disconnect()
       this.expressServer.close()
-      this.grcpServer.forceShutdown()
+      this.grpcServer.forceShutdown()
     } catch (err) {
       log.err(err)
     }
