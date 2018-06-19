@@ -73,7 +73,13 @@ export default class MdPortletServer {
     }
     let methodName = methodNameOverride || MdUtils.getFunctionName(method)
     this.exposedGrpc = this.exposedGrpc || {}
-    this.exposedGrpc[methodName] = method
+
+    let wrapper = (call, callback) => {
+      this.msgHub.msgHubLog(MdMessageHub.CODE.INVOKE)
+      method(call, callback)
+    }
+
+    this.exposedGrpc[methodName] = wrapper
     log.info(`Method '${methodName}' added to GRPC handlers`)
   }
 
