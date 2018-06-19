@@ -9,9 +9,10 @@ const MSGHUB_ID = process.env.MSGHUB_ID || 'mdesktop'
 const appDir = path.dirname(require.main.filename)
 
 export default class MdPortletServer {
-  constructor (id, portletLocation) {
+  constructor (id, portletLocation, grpcDefLocation) {
     log.debug(`Creating ${this.constructor.name} (id = ${id})`)
     this.portletLocation = portletLocation
+    this.grpcDefLocation = grpcDefLocation
 
     // Cleanup on exit
     process.on('SIGINT', ::this.destructor)
@@ -68,6 +69,9 @@ export default class MdPortletServer {
     if (this.portletLocation) {
       this.app.use('/', ::this.servePortlet)
     }
+    if (this.grpcDefLocation) {
+      this.app.use('/grpc', ::this.serveGrpcDef)
+    }
     this.app.listen(port, (err) => {
       if (err) {
         log.error('Cannot start the server on port ' + port)
@@ -80,6 +84,10 @@ export default class MdPortletServer {
 
   servePortlet (req, res, next) {
     res.sendFile(path.join(appDir, this.portletLocation))
+  }
+
+  serveGrpcDef (req, res, next) {
+    res.sendFile(path.join(appDir, this.grpcDefLocation))
   }
 
   async handleApiCall (req, res, next) {
