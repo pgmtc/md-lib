@@ -66,8 +66,8 @@ export default class MdPortletServer {
     this.apiRouter.delete(path, handler)
   }
 
-  exposeGrpc(method) {
-    let methodName = MdUtils.getFunctionName(method)
+  exposeGrpc(method, methodNameOverride) {
+    let methodName = methodNameOverride || MdUtils.getFunctionName(method)
     this.exposedGrpc = this.exposedGrpc || {}
     this.exposedGrpc[methodName] = method
     log.info(`Method '${methodName}' added to GRPC handlers`)
