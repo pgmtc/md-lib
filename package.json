@@ -22,6 +22,8 @@
     "systeminformation": "^3.41.4"
   },
   "peerDependencies": {
+    "grpc": "^1.13.0-pre1",
+    "google-protobuf": "^3.5.0",
     "express": "4.x",
     "nats": ">=0.8",
     "winston": "2.x",

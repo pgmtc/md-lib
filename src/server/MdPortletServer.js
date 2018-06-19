@@ -3,6 +3,7 @@ import path from 'path'
 import log from './logger'
 import MdMessageHub from './MdMessageHub'
 import MdUtils from './MdUtils'
+import grpc from 'grpc'
 
 const MSGHUB_SERVER = process.env.MSGHUB_SERVER || undefined
 const MSGHUB_ID = process.env.MSGHUB_ID || 'mdesktop'
@@ -40,6 +41,8 @@ export default class MdPortletServer {
 
     this.app = express()
     this.apiRouter = express.Router()
+
+    this.grcpServer = new grpc.Server()
   }
 
   exposeGet (path, handler) {
@@ -62,6 +65,10 @@ export default class MdPortletServer {
     this.apiRouter.delete(path, handler)
   }
 
+  exposeGrpc(service, handlers) {
+    this.grpcServer.addService(service, handlers)
+  }
+
   listen (port) {
     this.listenPort = port
     this.app.use('/api', this.apiRouter)
@@ -73,7 +80,7 @@ export default class MdPortletServer {
     if (this.portletLocation) {
       this.app.use('/', ::this.servePortlet)
     }
-    this.app.listen(port, (err) => {
+    this.expressServer = this.app.listen(port, (err) => {
       if (err) {
         log.error('Cannot start the server on port ' + port)
         process.exit(1)
@@ -82,6 +89,14 @@ export default class MdPortletServer {
       log.info('Server running on *:' + port)
     })
   }
+
+  listenGrpc (grpcPort) {
+    this.grpcPort = grpcPort
+    this.grpcServer.bind('0.0.0.0:' + grpcPort, grpc.ServerCredentials.createInsecure())
+    this.grpcServer.start()
+    log.info('GRPC server running on *:' + grpcPort)
+  }
+
 
   servePortlet (req, res, next) {
     res.sendFile(path.join(appDir, this.portletLocation))
@@ -106,7 +121,14 @@ export default class MdPortletServer {
   }
 
   destructor (err) {
-    this.msgHub.disconnect()
+    try {
+      this.msgHub.disconnect()
+      this.expressServer.close()
+      this.grcpServer.forceShutdown()
+    } catch (err) {
+      log.err(err)
+    }
+
     if (err) {
       log.error(err)
     }
