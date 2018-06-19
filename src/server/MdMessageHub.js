@@ -17,7 +17,10 @@ const CODE = {
 }
 
 export default class MdMessageHub {
-  static CODE = CODE
+  static get CODE() {
+    return CODE
+  }
+
   constructor(msgHubId, clientType) {
     this.msgHubId = msgHubId
     this.clientType = clientType
