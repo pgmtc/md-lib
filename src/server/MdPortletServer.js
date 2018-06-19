@@ -67,6 +67,10 @@ export default class MdPortletServer {
   }
 
   exposeGrpc(method, methodNameOverride) {
+    if (!method || typeof(method) !== 'function') {
+      log.error('exposeGrpc needs to be provided a function object')
+      return
+    }
     let methodName = methodNameOverride || MdUtils.getFunctionName(method)
     this.exposedGrpc = this.exposedGrpc || {}
     this.exposedGrpc[methodName] = method
