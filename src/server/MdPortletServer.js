@@ -103,7 +103,7 @@ export default class MdPortletServer {
 
   _addGrpcService() {
     try {
-      let grcpProto = protoLoader.loadSync(__dirname + '/' + this.grpcDefLocation, {})
+      let grcpProto = protoLoader.loadSync(this.grpcDefLocation, {})
       let grcpPackage = grpc.loadPackageDefinition(grcpProto)
       let defaultPkgName = Object.keys(grcpPackage)[0]
       let defaultPkgObject = grcpPackage[defaultPkgName]
