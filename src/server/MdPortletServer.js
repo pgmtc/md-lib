@@ -66,11 +66,12 @@ export default class MdPortletServer {
     this.listenPort = port
     this.app.use('/api', this.apiRouter)
 
-    if (this.portletLocation) {
-      this.app.use('/', ::this.servePortlet)
-    }
     if (this.grpcDefLocation) {
       this.app.use('/grpc', ::this.serveGrpcDef)
+    }
+
+    if (this.portletLocation) {
+      this.app.use('/', ::this.servePortlet)
     }
     this.app.listen(port, (err) => {
       if (err) {
