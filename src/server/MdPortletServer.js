@@ -126,7 +126,7 @@ export default class MdPortletServer {
       this.expressServer.close()
       this.grpcServer.forceShutdown()
     } catch (err) {
-      log.err(err)
+      log.error(err)
     }
 
     if (err) {
