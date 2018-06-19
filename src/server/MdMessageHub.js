@@ -84,15 +84,28 @@ export default class MdMessageHub {
   }
 
   publish(subject, message) {
-    this.nats.publish(subject, message)
+    if (this.nats) {
+      this.nats.publish(subject, message)
+    } else {
+      log.warn('nats object not available (not connected)')
+    }
+
   }
 
   subscribe(subject, handler) {
-    this.nats.subscribe(subject, handler)
+    if (this.nats) {
+      this.nats.subscribe(subject, handler)
+    } else {
+      log.warn('nats object not available (not connected)')
+    }
   }
 
   subscribeQueue(subject, queue, handler) {
-    this.nats.subscribe(subject, { queue: queue }, handler)
+    if (this.nats) {
+      this.nats.subscribe(subject, {queue: queue}, handler)
+    } else {
+      log.warn('nats object not available (not connected)')
+    }
   }
 
   expose(method, overrideMethodName) {
@@ -120,8 +133,12 @@ export default class MdMessageHub {
           message: err.message
         }
       }
-      this.nats.publish(replyTo, JSON.stringify(response));
-      this.msgHubLog(CODE.DONE)
+      if (this.nats) {
+        this.nats.publish(replyTo, JSON.stringify(response));
+        this.msgHubLog(CODE.DONE)
+      } else {
+        log.warn('nats object not available (not connected)')
+      }
     })
   }
 
@@ -148,7 +165,11 @@ export default class MdMessageHub {
         method.apply(this, [job].concat(parameters))
         this.msgHubLog(CODE.JOB)
       }
-      this.nats.subscribe(runEndpoint, runHandler)
+      if (this.nats) {
+        this.nats.subscribe(runEndpoint, runHandler)
+      } else {
+        log.warn('nats object not available (not connected)')
+      }
 
       // Pass back endpoint and job id
       return {
@@ -160,6 +181,10 @@ export default class MdMessageHub {
   }
 
   invoke(endpoint, ...parameters) {
+    if (!this.nats) {
+      log.warn('nats object not available (not connected)')
+      return
+    }
     if (this.invokePathPrefix) {
       endpoint = this.invokePathPrefix + endpoint
     }
