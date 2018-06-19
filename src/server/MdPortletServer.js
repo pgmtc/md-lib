@@ -4,6 +4,7 @@ import log from './logger'
 import MdMessageHub from './MdMessageHub'
 import MdUtils from './MdUtils'
 import grpc from 'grpc'
+const protoLoader = require('@grpc/proto-loader')
 
 const MSGHUB_SERVER = process.env.MSGHUB_SERVER || undefined
 const MSGHUB_ID = process.env.MSGHUB_ID || 'mdesktop'
