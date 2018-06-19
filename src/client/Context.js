@@ -86,13 +86,12 @@ export default class Context {
       throw new Error('axios have not been provided to the portlet')
     }
 
-    try {
-      var url = this._makeGrpcUrl(method, params)
-      var results = await this.axios.get(url)
+    var url = this._makeGrpcUrl(method, params)
+    this.axios.get(url).then((response) => {
       return results.data
-    } catch (err) {
+    }).catch((err) => {
       this.api.error('Error when loading data: ' + err.message)
-    }
+    })
   }
 
   async apiCall (method, params) {
