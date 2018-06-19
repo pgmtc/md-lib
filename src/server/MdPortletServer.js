@@ -65,8 +65,10 @@ export default class MdPortletServer {
     this.apiRouter.delete(path, handler)
   }
 
-  exposeGrpc(service, handlers) {
-    this.grpcServer.addService(service, handlers)
+  exposeGrpc(methodName, handler) {
+    this.exposedGrpc = this.exposedGrpc || {}
+    this.exposedGrpc[methodName] = handler
+    log.info(`Method '${methodName}' added to GRPC handlers`)
   }
 
   listen (port) {
@@ -92,9 +94,24 @@ export default class MdPortletServer {
 
   listenGrpc (grpcPort) {
     this.grpcPort = grpcPort
+    this._addGrpcService()
     this.grpcServer.bind('0.0.0.0:' + grpcPort, grpc.ServerCredentials.createInsecure())
     this.grpcServer.start()
     log.info('GRPC server running on *:' + grpcPort)
+  }
+
+  _addGrpcService() {
+    try {
+      let grcpProto = protoLoader.loadSync(__dirname + '/' + this.grpcDefLocation, {})
+      let grcpPackage = grpc.loadPackageDefinition(grcpProto)
+      let defaultPkgName = Object.keys(grcpPackage)[0]
+      let defaultPkgObject = grcpPackage[defaultPkgName]
+      let defaultServiceName = Object.keys(defaultPkgObject)[0]
+      let defaultServiceObject = defaultPkgObject[defaultServiceName]
+      this.grpcServer.addService(defaultServiceObject.service, this.exposedGrpc)
+    } catch (err) {
+      log.error('Unable to load service into GRPC server', err)
+    }
   }
 
 

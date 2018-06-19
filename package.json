@@ -24,6 +24,7 @@
   "peerDependencies": {
     "grpc": "^1.13.0-pre1",
     "google-protobuf": "^3.5.0",
+    "@grpc/proto-loader": "^0.1.0",
     "express": "4.x",
     "nats": ">=0.8",
     "winston": "2.x",
