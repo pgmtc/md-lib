@@ -76,7 +76,12 @@ export default class MdPortletServer {
 
     let wrapper = (call, callback) => {
       this.msgHub.msgHubLog(MdMessageHub.CODE.INVOKE)
-      method(call, callback)
+      try {
+        let results = method(call.request)
+        callback(null, results)
+      } catch (err) {
+        callback(err)
+      }
     }
 
     this.exposedGrpc[methodName] = wrapper

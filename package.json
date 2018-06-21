@@ -1,6 +1,6 @@
 {
-  "name": "md-lib",
-  "version": "1.4.19",
+  "name": "@pgmtc/md-lib",
+  "version": "0.0.1",
   "description": "Dependency library for modular desktop portlets",
   "repository": "https://github.com/pgmtc/md-lib",
   "scripts": {
