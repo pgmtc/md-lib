@@ -1,4 +1,6 @@
 import util from 'util'
+import log from './logger'
+
 var STRIP_COMMENTS = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/mg
 var ARGUMENT_NAMES = /([^\s,]+)/g
 
@@ -22,11 +24,11 @@ export default class MdUtils {
   }
 
   static decodeApiParams (encoded) {
-    let parsed = decodeURIComponent(encoded)
+    let parsed = decodeURIComponent(encoded || '[]')
     try {
       parsed = JSON.parse(parsed)
     } catch (err) {
-
+      log.silly(`No success when parsing API parameters ('${encoded}'). Expected JSON array. Using 'raw' value instead: ${err.message}`)
     }
     return parsed
   }
