@@ -10,7 +10,7 @@
     "start": "babel -s inline -d . -w src",
     "build": "babel -s inline -d . src"
   },
-  "author": "praguematica",
+  "author": "Praguematica Ltd",
   "license": "ISC",
   "devDependencies": {
     "babel-cli": "^6.26.0",
