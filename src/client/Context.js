@@ -56,11 +56,11 @@ export default class Context {
   get api () {
     return {
       inProgress: (value) => {
-
+        this.dispatchEvent('progress', value)
       },
 
       setTitle: (value) => {
-
+        this.dispatchEvent('title', value)
       },
 
       error: (err) => {
@@ -92,6 +92,7 @@ export default class Context {
       throw new Error('axios have not been provided to the context')
     }
     try {
+      this.api.inProgress(true)
       var results = await this.axios({
         url: noUrlFix ? path : this._makeUrl(path),
         method: method,
@@ -104,6 +105,8 @@ export default class Context {
 
     } catch (err) {
       this.api.error('Error when loading data: ' + err.message)
+    } finally {
+      this.api.inProgress(false)
     }
   }
 
@@ -113,6 +116,7 @@ export default class Context {
     }
 
     try {
+      this.api.inProgress(true)
       var results = await this.axios({
         url: this._makeGrpcUrl(method, params),
         method: 'get',
@@ -125,6 +129,8 @@ export default class Context {
 
     } catch (err) {
       this.api.error(new Error('Error when calling GRPC: ' + err.message))
+    } finally {
+      this.api.inProgress(false)
     }
   }
 
@@ -134,6 +140,7 @@ export default class Context {
     }
 
     try {
+      this.api.inProgress(true)
       var results = await this.axios({
         url: this._makeApiUrl(method, params),
         method: 'get',
@@ -146,17 +153,21 @@ export default class Context {
 
     } catch (err) {
       this.api.error('Error when calling API: ' + err.message)
+    } finally {
+      this.api.inProgress(false)
     }
   }
 
   async apiJob (methodName, params, messageHandler) {
     return new Promise(async (resolve, reject) => {
       var doneHandler = (result) => {
+        this.api.inProgress(false)
         resolve(result)
         detach()
       }
 
       var errorHandler = (result) => {
+        this.api.inProgress(false)
         reject(result)
         detach()
       }
@@ -174,6 +185,7 @@ export default class Context {
       }
 
       var token = await this.apiCall(methodName, params)
+      this.api.inProgress(true)
       this.socket.on(`worker.${token}:done`, doneHandler)
       this.socket.on(`worker.${token}:error`, errorHandler)
       this.socket.on(`worker.${token}:message`, msgHandler)
