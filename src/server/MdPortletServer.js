@@ -7,15 +7,13 @@ const appDir = path.dirname(require.main.filename)
 var MdMessageHub = null
 
 /*
-portletLocation
-grpcDefLocation
-msgHubServer
-msgHubId
-enableNats
-enableHttp
-enableGrpc
-
-
+  portletLocation
+  grpcDefLocation
+  msgHubServer
+  msgHubId
+  enableNats
+  enableHttp
+  enableGrpc
  */
 export default class MdPortletServer {
   constructor (config) {

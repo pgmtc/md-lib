@@ -63,19 +63,45 @@ export default class Context {
 
       },
 
-      error: (value) => {
-
+      error: (err) => {
+        this.dispatchEvent('error', err)
       }
     }
   }
 
+  on(event, handler) {
+    this._handlers = this._handlers || {}
+    this._handlers[event] = this._handlers[event] || []
+    this._handlers[event].push(handler)
+  }
+
+  dispatchEvent(event, ...params) {
+    if (!this._handlers) return
+    if (!this._handlers[event]) return
+    this._handlers[event].forEach((handler) => {
+      handler(...params)
+    })
+  }
+
   async httpGet (path, noUrlFix) {
+    return this.http('get', path, noUrlFix)
+  }
+
+  async http (method, path, noUrlFix) {
     if (!this.axios) {
       throw new Error('axios have not been provided to the context')
     }
     try {
-      const response = await this.axios.get(noUrlFix ? path : this._makeUrl(path))
-      return response.data
+      var results = await this.axios({
+        url: noUrlFix ? path : this._makeUrl(path),
+        method: method,
+        validateStatus: status => true
+      })
+      if (results.status >= 200 && results.status <= 300) {
+        return results.data
+      }
+      throw new Error(results.data && results.data.message ? results.data.message : 'Server error')
+
     } catch (err) {
       this.api.error('Error when loading data: ' + err.message)
     }
@@ -87,11 +113,18 @@ export default class Context {
     }
 
     try {
-      var url = this._makeGrpcUrl(method, params)
-      var results = await this.axios.get(url)
-      return results.data
+      var results = await this.axios({
+        url: this._makeGrpcUrl(method, params),
+        method: 'get',
+        validateStatus: status => true
+      })
+      if (results.status >= 200 && results.status <= 300) {
+        return results.data
+      }
+      throw new Error(results.data && results.data.message ? results.data.message : 'Server error')
+
     } catch (err) {
-      this.api.error('Error when loading data: ' + err.message)
+      this.api.error(new Error('Error when calling GRPC: ' + err.message))
     }
   }
 
@@ -101,11 +134,18 @@ export default class Context {
     }
 
     try {
-      var url = this._makeApiUrl(method, params)
-      var results = await this.axios.get(url)
-      return results.data
+      var results = await this.axios({
+        url: this._makeApiUrl(method, params),
+        method: 'get',
+        validateStatus: status => true
+      })
+      if (results.status >= 200 && results.status <= 300) {
+        return results.data
+      }
+      throw new Error(results.data && results.data.message ? results.data.message : 'Server error')
+
     } catch (err) {
-      this.api.error('Error when loading data: ' + err.message)
+      this.api.error('Error when calling API: ' + err.message)
     }
   }
 
