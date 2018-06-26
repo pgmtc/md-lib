@@ -26,7 +26,7 @@ export default class MdPortletServer {
     }
 
     if (this.config.enableNats) {
-      MdMessageHub = require('./MdMessageHub')
+      MdMessageHub = require('./MdMessageHub').default
     }
 
     let validation = this.validate()
